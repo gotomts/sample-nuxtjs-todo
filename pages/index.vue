@@ -6,10 +6,18 @@
       <button id="add-button" class="button button--green" @click="insert">追加</button>
     </div>
     <div class="filter">
-      <button class="button button-gray is-active">全て</button>
-      <button class="button button-gray">作業前</button>
-      <button class="button button-gray">作業中</button>
-      <button class="button button-gray">完了</button>
+      <button class="button button-gray" v-bind:class="{
+        'is-active': (!findFlg)
+      }" @click="flgReset">全て</button>
+      <button class="button button-gray" :class="{
+        'is-active': findFlg && (findState == '作業前')
+      }" @click="find('作業前')">作業前</button>
+      <button class="button button-gray" :class="{
+        'is-active': findFlg && (findState == '作業中')
+      }" @click="find('作業中')">作業中</button>
+      <button class="button button-gray" :class="{
+        'is-active': findFlg && (findState == '完了')
+      }" @click="find('完了')">完了</button>
     </div>
     <table class="lists">
       <thead>
@@ -21,7 +29,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in todos" :key="index">
+        <tr v-for="(item, index) in displayTodos" :key="index">
           <td>{{ item.content }}</td>
           <td>{{ item.created }}</td>
           <td>
@@ -49,11 +57,27 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      content: ""
+      content: "",
+      findState: "",
+      findFlg: false
     }
   },
   computed: {
-    ...mapState(["todos"])
+    ...mapState(["todos"]),
+    displayTodos() {
+      if (this.findFlg) {
+        const arr = [];
+        const data = this.todos;
+        data.forEach(element => {
+          if (element.state == this.findState) {
+            arr.push(element);
+          }
+        });
+        return arr;
+      } else {
+        return this.todos;
+      }
+    }
   },
   methods: {
     insert() {
@@ -69,6 +93,13 @@ export default {
     },
     changeState(todo) {
       this.$store.commit("changeState", todo);
+    },
+    find(findState) {
+      this.findState = findState;
+      this.findFlg = true;
+    },
+    flgReset() {
+      this.findFlg = false;
     }
   }
 };
