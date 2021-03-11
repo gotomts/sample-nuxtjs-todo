@@ -2,8 +2,8 @@
   <section class="container">
     <h1>Todoリスト</h1>
     <div class="add-area">
-      <input type="text" name="add-name" id="add-name" placeholder="タスクを入力してください">
-      <button id="add-button" class="button button--green">追加</button>
+      <input type="text" name="add-name" id="add-name" v-model="content" placeholder="タスクを入力してください">
+      <button id="add-button" class="button button--green" @click="insert">追加</button>
     </div>
     <div class="filter">
       <button class="button button-gray is-active">全て</button>
@@ -40,8 +40,23 @@
 import { mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      content: ""
+    }
+  },
   computed: {
     ...mapState(["todos"])
+  },
+  methods: {
+    insert() {
+      if (this.content != "") {
+        this.$store.commit("insert", {
+          content: this.content
+        });
+        this.content = "";
+      }
+    }
   }
 };
 </script>
