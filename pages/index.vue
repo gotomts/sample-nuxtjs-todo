@@ -3,7 +3,7 @@
     <h1>Todoリスト</h1>
     <div class="add-area">
       <input type="text" name="add-name" id="add-name" placeholder="タスクを入力してください">
-      <button id="add-button" class="button button-green">追加</button>
+      <button id="add-button" class="button button--green">追加</button>
     </div>
     <div class="filter">
       <button class="button button-gray is-active">全て</button>
@@ -21,14 +21,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>テスト</td>
-          <td>2020-04-30 17:00</td>
+        <tr v-for="(item, index) in todos" :key="index">
+          <td>{{ item.content }}</td>
+          <td>{{ item.created }}</td>
           <td>
-            <button class="button button--yet">作業前</button>
+            <button class="button button--yet">{{ item.state }}</button>
           </td>
           <td>
-            <button class="button button--delete">削除</button>
+            <button class="button button--red">削除</button>
           </td>
         </tr>
       </tbody>
@@ -37,7 +37,13 @@
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+
+export default {
+  computed: {
+    ...mapState(["todos"])
+  }
+};
 </script>
 
 <style>
@@ -74,11 +80,11 @@ th, td {
   background: #000;
   color: #fff;
 }
-.button-green {
+.button--green {
   border-color: green;
   color: green;
 }
-.button--delete {
+.button--red {
   border-color: red;
   color: red;
 }
