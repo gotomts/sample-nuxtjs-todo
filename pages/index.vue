@@ -28,7 +28,7 @@
             <button class="button button--yet">{{ item.state }}</button>
           </td>
           <td>
-            <button class="button button--red">削除</button>
+            <button class="button button--red" @click="remove(item)">削除</button>
           </td>
         </tr>
       </tbody>
@@ -56,6 +56,9 @@ export default {
         });
         this.content = "";
       }
+    },
+    remove(todo) {
+      this.$store.commit("remove", todo);
     }
   }
 };
