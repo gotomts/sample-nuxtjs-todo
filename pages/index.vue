@@ -25,7 +25,14 @@
           <td>{{ item.content }}</td>
           <td>{{ item.created }}</td>
           <td>
-            <button class="button button--yet">{{ item.state }}</button>
+            <button class="button"
+              :class="{
+                'button--yet': item.state === '作業前',
+                'button--progress': item.state === '作業中',
+                'button--done': item.state === '完了'
+              }"
+              @click="changeState(item)"
+              >{{ item.state }}</button>
           </td>
           <td>
             <button class="button button--red" @click="remove(item)">削除</button>
@@ -59,6 +66,9 @@ export default {
     },
     remove(todo) {
       this.$store.commit("remove", todo);
+    },
+    changeState(todo) {
+      this.$store.commit("changeState", todo);
     }
   }
 };
@@ -105,6 +115,14 @@ th, td {
 .button--red {
   border-color: red;
   color: red;
+}
+.button--progress {
+  background: blue;
+  color: white;
+}
+.button--done {
+  background: black;
+  color: white;
 }
 .add-area {
   margin-bottom: 20px;
